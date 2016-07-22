@@ -17,6 +17,11 @@ def home():
     return redirect(url_for('sign_in'))
 
 
+@application.route('/dashboard', methods=['GET'])
+def dashboard():
+    return render_template('dashboard.html')
+
+
 @application.route('/sign_in', methods=['GET', 'POST'])
 def sign_in():
     if request.method == 'POST':
@@ -40,8 +45,7 @@ def sign_in():
                 else:
                     flash(Markup('<strong>Welcome ' + str(g.user.name) + '!</strong>'), 'success')
 
-                    # return redirect(url_for('dashboard'))
-                    return render_template('base.html')
+                    return redirect(url_for('dashboard'))
 
     return render_template('sign_in.html')
 

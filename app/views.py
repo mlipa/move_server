@@ -3,7 +3,7 @@
 
 from app import application, hashing, login_manager, models
 from flask import flash, g, Markup, redirect, render_template, request, url_for
-from flask_login import current_user, login_user
+from flask_login import current_user, login_required, login_user
 
 
 @application.before_request
@@ -14,10 +14,11 @@ def before_request():
 @application.route('/', methods=['GET'])
 @application.route('/index', methods=['GET'])
 def home():
-    return redirect(url_for('sign_in'))
+    return redirect(url_for('dashboard'))
 
 
 @application.route('/dashboard', methods=['GET'])
+@login_required
 def dashboard():
     return render_template('dashboard.html')
 

@@ -22,9 +22,6 @@ class Users(database.Model):
     email = database.Column(database.String(128),
                             index=True,
                             unique=True)
-    avatar = database.Column(database.String(64),
-                             index=False,
-                             unique=True)
 
     @staticmethod
     def is_active():

@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-from configuration import Configuration
 from flask import Flask, Markup
 from flask_hashing import Hashing
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
+
+from configuration import Configuration
 
 application = Flask(__name__)
 application.secret_key = 'secret_key'

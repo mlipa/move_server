@@ -1,11 +1,20 @@
 body {
-    padding-top: 66px;
-    background-color: #eeeeee;
+    padding-top: 50px;
 }
 
-.img-logo {
-    width: 25px;
-    height: 25px;
+@media (min-width: 768px) {
+    .main {
+        padding-right: 40px;
+        padding-left: 40px;
+    }
+}
+
+.main {
+    padding: 20px;
+}
+
+.main .page-header {
+    margin-top: 0;
 }
 
 .navbar-fixed-top {
@@ -26,27 +35,17 @@ body {
 .nav-sidebar > .active > a,
 .nav-sidebar > .active > a:hover,
 .nav-sidebar > .active > a:focus {
-    color: #fff;
-    background-color: #fda900;
-}
-
-@media (min-width: 768px) {
-    .main {
-        padding-right: 40px;
-        padding-left: 40px;
-    }
-}
-
-.main {
-    padding: 20px;
-}
-
-.main .page-header {
-    margin-top: 0;
+    color: #ffffff;
+    background-color: #428bca;
 }
 
 .placeholder {
     margin-bottom: 20px;
+}
+
+.placeholder img {
+    display: inline-block;
+    border-radius: 50%;
 }
 
 .placeholders {
@@ -56,11 +55,6 @@ body {
 
 .placeholders h4 {
     margin-bottom: 0;
-}
-
-.placeholder img {
-    display: inline-block;
-    border-radius: 50%;
 }
 
 @media (min-width: 768px) {
@@ -75,7 +69,7 @@ body {
         overflow-x: hidden;
         overflow-y: auto;
         background-color: #f5f5f5;
-        border-right: 1px solid #eee;
+        border-right: 1px solid #eeeeee;
     }
 }
 
@@ -85,5 +79,5 @@ body {
 
 .sub-header {
     padding-bottom: 10px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #eeeeee;
 }

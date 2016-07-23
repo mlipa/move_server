@@ -1,46 +1,37 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="{{ url_for('static', filename='images/favicon.ico') }}" rel="icon">
-    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+{% extends "base.html" %}
+
+{% block title %} - Sign in{% endblock %}
+
+{% block head %}
+    {{ super() }}
     <link href="{{ url_for('static', filename='css/sign_in.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/sticky_footer.css') }}" rel="stylesheet">
-    <title>Move - Sign in</title>
-</head>
-<body>
-<div class="container">
-    <form class="form-signin" method="post">
-        <h2 class="form-signin-heading"><img class="img-logo" src="../static/images/logo.png"> Move</h2>
-        <br>
-        <label for="input_username" class="sr-only">Username</label>
-        <input type="text" id="input_username" class="form-control" placeholder="Username" name="username"
-               value="{{ request.form.username }}" required autofocus>
-        <label for="input_password" class="sr-only">Password</label>
-        <input type="password" id="input_password" class="form-control" placeholder="Password" name="password"
-               value="{{ request.form.password }}" required autofocus>
-        <br>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-    </form>
+{% endblock %}
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <br>
-                <div class="alert alert-{{ category }}" role="alert">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-</div>
-
-<footer class="footer">
+{% block content %}
     <div class="container">
-        <p class="text-muted text-center">&copy; 2016 Marcin Lipa (Poznan University of Technology). All rights
-            reserved.</p>
+        <form class="form-signin" method="post">
+            <h2 class="form-signin-heading"><img class="img-logo"
+                                                 src="{{ url_for('static', filename='images/logo.png') }}"> Move</h2>
+            <br>
+            <label for="input_username" class="sr-only">Username</label>
+            <input type="text" id="input_username" class="form-control" placeholder="Username" name="username"
+                   value="{{ request.form.username }}" autofocus>
+            <label for="input_password" class="sr-only">Password</label>
+            <input type="password" id="input_password" class="form-control" placeholder="Password" name="password"
+                   value="{{ request.form.password }}">
+            <br>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        </form>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <br>
+                    <div class="alert alert-{{ category }}" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
     </div>
-</footer>
-</body>
-</html>
+{% endblock %}

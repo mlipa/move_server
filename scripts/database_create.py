@@ -3,9 +3,10 @@
 
 import os
 
+from migrate.versioning import api
+
 from app import database
 from configuration import Configuration
-from migrate.versioning import api
 
 database.create_all()
 

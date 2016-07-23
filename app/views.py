@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-from app import application, hashing, login_manager, models
 from flask import flash, g, Markup, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user
+
+from app import application, hashing, login_manager, models
 
 
 @application.before_request

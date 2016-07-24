@@ -13,9 +13,8 @@ def before_request():
 
 
 @application.route('/', methods=['GET'])
-@application.route('/index', methods=['GET'])
 def home():
-    return redirect(url_for('dashboard'))
+    return redirect(url_for('sign_in'))
 
 
 @application.route('/sign_in', methods=['GET', 'POST'])

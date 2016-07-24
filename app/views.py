@@ -18,12 +18,6 @@ def home():
     return redirect(url_for('dashboard'))
 
 
-@application.route('/dashboard', methods=['GET'])
-@login_required
-def dashboard():
-    return render_template('dashboard.html')
-
-
 @application.route('/sign_in', methods=['GET', 'POST'])
 def sign_in():
     if request.method == 'POST':
@@ -50,6 +44,30 @@ def sign_in():
                     return redirect(url_for('dashboard'))
 
     return render_template('sign_in.html')
+
+
+@application.route('/dashboard', methods=['GET'])
+@login_required
+def dashboard():
+    return render_template('dashboard.html')
+
+
+@application.route('/settings', methods=['GET'])
+@login_required
+def settings():
+    return render_template('settings.html')
+
+
+@application.route('/profile', methods=['GET'])
+@login_required
+def profile():
+    return render_template('profile.html')
+
+
+@application.route('/about', methods=['GET'])
+@login_required
+def about():
+    return render_template('about.html')
 
 
 @login_manager.user_loader

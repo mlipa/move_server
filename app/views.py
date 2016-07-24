@@ -2,7 +2,7 @@
 # coding: utf-8
 
 from flask import flash, g, Markup, redirect, render_template, request, url_for
-from flask_login import current_user, login_required, login_user
+from flask_login import current_user, login_required, login_user, logout_user
 
 from app import application, hashing, login_manager, models
 
@@ -48,25 +48,34 @@ def sign_in():
 @application.route('/dashboard', methods=['GET'])
 @login_required
 def dashboard():
-    return render_template('dashboard.html')
+    return render_template('dashboard.html', user=g.user)
 
 
 @application.route('/settings', methods=['GET'])
 @login_required
 def settings():
-    return render_template('settings.html')
+    return render_template('settings.html', user=g.user)
 
 
-@application.route('/profile', methods=['GET'])
+@application.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
-    return render_template('profile.html')
+    if request.method == 'POST':
+        logged_name = str(g.user.name)
+
+        logout_user()
+
+        flash(Markup('<strong>Bye, bye ' + logged_name + '!</strong> Come back soon!'), 'success')
+
+        return redirect(url_for('sign_in'))
+
+    return render_template('profile.html', user=g.user)
 
 
 @application.route('/about', methods=['GET'])
 @login_required
 def about():
-    return render_template('about.html')
+    return render_template('about.html', user=g.user)
 
 
 @login_manager.user_loader

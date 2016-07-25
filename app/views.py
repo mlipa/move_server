@@ -48,13 +48,13 @@ def sign_in():
 @application.route('/dashboard', methods=['GET'])
 @login_required
 def dashboard():
-    return render_template('dashboard.html', user=g.user)
+    return render_template('dashboard.html')
 
 
 @application.route('/settings', methods=['GET'])
 @login_required
 def settings():
-    return render_template('settings.html', user=g.user)
+    return render_template('settings.html')
 
 
 @application.route('/profile', methods=['GET', 'POST'])
@@ -75,7 +75,7 @@ def profile():
 @application.route('/about', methods=['GET'])
 @login_required
 def about():
-    return render_template('about.html', user=g.user)
+    return render_template('about.html')
 
 
 @login_manager.user_loader

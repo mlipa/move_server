@@ -9,6 +9,16 @@ from flask_login import current_user, login_required, login_user, logout_user
 from app import application, hashing, login_manager, models
 
 
+def get_avatar():
+    app_directory = os.path.abspath(os.path.dirname(__file__))
+    avatar = url_for('static', filename='img/' + g.user.username + '.png')
+
+    if not os.path.exists(app_directory + avatar):
+        avatar = url_for('static', filename='img/avatar.png')
+
+    return avatar
+
+
 @application.before_request
 def before_request():
     g.user = current_user
@@ -47,18 +57,6 @@ def sign_in():
     return render_template('sign_in.html')
 
 
-@application.route('/sign_out', methods=['GET'])
-@login_required
-def sign_out():
-    logged_name = str(g.user.name)
-
-    logout_user()
-
-    flash(Markup('<strong>Bye, bye ' + logged_name + '!</strong> Come back soon!'), 'success')
-
-    return redirect(url_for('sign_in'))
-
-
 @application.route('/dashboard', methods=['GET'])
 @login_required
 def dashboard():
@@ -74,13 +72,22 @@ def settings():
 @application.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
-    app_directory = os.path.abspath(os.path.dirname(__file__))
-    avatar = url_for('static', filename='img/' + g.user.username + '.png')
+    if request.method == 'POST':
+        logged_name = str(g.user.name)
 
-    if not os.path.exists(app_directory + avatar):
-        avatar = url_for('static', filename='img/avatar.png')
+        logout_user()
 
-    return render_template('profile.html', user=g.user, avatar=avatar)
+        flash(Markup('<strong>Bye, bye ' + logged_name + '!</strong> Come back soon!'), 'success')
+
+        return redirect(url_for('sign_in'))
+
+    return render_template('profile.html', user=g.user, avatar=get_avatar())
+
+
+@application.route('/edit_profile', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+    return render_template('edit_profile.html', user=g.user, avatar=get_avatar())
 
 
 @application.route('/about', methods=['GET'])

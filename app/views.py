@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import os
+
 from flask import flash, g, Markup, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 
@@ -69,7 +71,13 @@ def profile():
 
         return redirect(url_for('sign_in'))
 
-    return render_template('profile.html', user=g.user)
+    app_directory = os.path.abspath(os.path.dirname(__file__))
+    avatar = url_for('static', filename='img/' + g.user.username + '.png')
+
+    if not os.path.exists(app_directory + avatar):
+        avatar = url_for('static', filename='img/avatar.png')
+
+    return render_template('profile.html', user=g.user, avatar=avatar)
 
 
 @application.route('/about', methods=['GET'])

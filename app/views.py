@@ -6,7 +6,13 @@ import os
 from flask import flash, g, Markup, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 
-from app import application, hashing, login_manager, models
+from app import application, database, hashing, login_manager, models
+
+USER_USERNAME_LENGTH = models.Users.username.property.columns[0].type.length
+USER_PASSWORD_LENGTH = models.Users.password.property.columns[0].type.length
+USER_SALT_LENGTH = models.Users.salt.property.columns[0].type.length
+USER_NAME_LENGTH = models.Users.name.property.columns[0].type.length
+USER_EMAIL_LENGTH = models.Users.email.property.columns[0].type.length
 
 
 def get_avatar():
@@ -14,7 +20,7 @@ def get_avatar():
     avatar = url_for('static', filename='img/' + g.user.username + '.png')
 
     if not os.path.exists(app_directory + avatar):
-        avatar = url_for('static', filename='img/avatar.png')
+        avatar = url_for('static', filename='img/default_avatar.png')
 
     return avatar
 
@@ -87,6 +93,58 @@ def profile():
 @application.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
+    if request.method == 'POST':
+        name = unicode(request.form['name'])[:USER_NAME_LENGTH]
+        username = unicode(request.form['username'])[:USER_USERNAME_LENGTH]
+        email = unicode(request.form['email'])[:USER_EMAIL_LENGTH]
+        old_password = unicode(request.form['old_password'])[:USER_PASSWORD_LENGTH]
+        new_password = unicode(request.form['new_password'])[:USER_PASSWORD_LENGTH]
+        confirm_new_password = unicode(request.form['confirm_new_password'])[:USER_PASSWORD_LENGTH]
+        avatar = unicode(request.form['avatar'])
+
+        user = models.Users.query.filter_by(id=g.user.id).first()
+
+        if name == user.name:
+            flash(Markup('<strong>Oops!</strong> The given name was the same as your current one.'), 'warning')
+        elif not name is None and name:
+            user.name = name
+
+            flash(Markup('<strong>Hello ' + str(name) + '!</strong> Your name has been changed successfully!'),
+                  'success')
+
+        if username == user.username:
+            flash(Markup('<strong>Oops!</strong> The given username was the same as your current one.'), 'warning')
+        elif username == 'default_avatar' or username == 'admin':
+            flash(Markup('<strong>Error!</strong> The given username is restricted.'), 'danger')
+        elif models.Users.query.filter_by(username=username).first():
+            flash(Markup('<strong>Bad luck!</strong> The given username is reserved by another user.'), 'danger')
+        elif not username is None and username:
+            app_directory = os.path.abspath(os.path.dirname(__file__))
+            avatar = get_avatar()
+
+            if g.user.username in avatar:
+                os.rename(app_directory + get_avatar(),
+                          app_directory + url_for('static', filename='img/' + username + '.png'))
+
+            user.username = username
+
+            flash(Markup('<strong>Hello ' + str(username) + '!</strong> Your username has been changed successfully!'),
+                  'success')
+
+        if email == user.email:
+            flash(Markup('<strong>Oops!</strong> The given e-mail was the same as your current one.'), 'warning')
+        elif models.Users.query.filter_by(email=email).first():
+            flash(Markup('<strong>Bad luck!</strong> The given e-mail is reserved by another user.'), 'danger')
+        elif not email is None and email:
+            user.email = email
+
+            flash(Markup('<strong>Hello ' + str(email) + '!</strong> Your e-mail has been changed successfully!'),
+                  'success')
+
+        database.session.commit()
+
+        return redirect(url_for('profile'))
+
     return render_template('edit_profile.html', user=g.user, avatar=get_avatar())
 
 

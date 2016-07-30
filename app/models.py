@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import os
+
+from flask import url_for
+
 from app import database
 
 
@@ -37,6 +41,15 @@ class Users(database.Model):
 
     def get_id(self):
         return unicode(self.id)
+
+    def get_avatar(self):
+        app_directory = os.path.abspath(os.path.dirname(__file__))
+        avatar = url_for('static', filename='img/' + self.username + '.png')
+
+        if not os.path.exists(app_directory + avatar):
+            avatar = url_for('static', filename='img/default_avatar.png')
+
+        return avatar
 
     def __repr__(self):
         return '<User %r>' % self.username

@@ -7,22 +7,9 @@ from flask import flash, g, Markup, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 
 from app import application, database, hashing, login_manager, models
+from forms import UserForm
 
-USER_USERNAME_LENGTH = models.Users.username.property.columns[0].type.length
-USER_PASSWORD_LENGTH = models.Users.password.property.columns[0].type.length
 USER_SALT_LENGTH = models.Users.salt.property.columns[0].type.length
-USER_NAME_LENGTH = models.Users.name.property.columns[0].type.length
-USER_EMAIL_LENGTH = models.Users.email.property.columns[0].type.length
-
-
-def get_avatar():
-    app_directory = os.path.abspath(os.path.dirname(__file__))
-    avatar = url_for('static', filename='img/' + g.user.username + '.png')
-
-    if not os.path.exists(app_directory + avatar):
-        avatar = url_for('static', filename='img/default_avatar.png')
-
-    return avatar
 
 
 @application.before_request
@@ -87,19 +74,25 @@ def profile():
 
         return redirect(url_for('sign_in'))
 
-    return render_template('profile.html', user=g.user, avatar=get_avatar())
+    return render_template('profile.html', user=g.user, avatar=g.user.get_avatar())
 
 
 @application.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
-    if request.method == 'POST':
-        name = unicode(request.form['name'])[:USER_NAME_LENGTH]
-        username = unicode(request.form['username'])[:USER_USERNAME_LENGTH]
-        email = unicode(request.form['email'])[:USER_EMAIL_LENGTH]
-        old_password = unicode(request.form['old_password'])[:USER_PASSWORD_LENGTH]
-        new_password = unicode(request.form['new_password'])[:USER_PASSWORD_LENGTH]
-        confirm_new_password = unicode(request.form['confirm_new_password'])[:USER_PASSWORD_LENGTH]
+    form = UserForm()
+
+    form.name.render_kw['placeholder'] = g.user.name
+    form.username.render_kw['placeholder'] = g.user.username
+    form.email.render_kw['placeholder'] = g.user.email
+
+    if request.method == 'POST' and form.validate_on_submit():
+        name = unicode(request.form['name'])
+        username = unicode(request.form['username'])
+        email = unicode(request.form['email'])
+        old_password = unicode(request.form['old_password'])
+        new_password = unicode(request.form['new_password'])
+        confirm_new_password = unicode(request.form['confirm_new_password'])
         avatar = unicode(request.form['avatar'])
 
         user = models.Users.query.filter_by(id=g.user.id).first()
@@ -120,10 +113,10 @@ def edit_profile():
             flash(Markup('<strong>Bad luck!</strong> The given username is reserved by another user.'), 'danger')
         elif not username is None and username:
             app_directory = os.path.abspath(os.path.dirname(__file__))
-            avatar = get_avatar()
+            avatar = g.userget_avatar()
 
             if g.user.username in avatar:
-                os.rename(app_directory + get_avatar(),
+                os.rename(app_directory + avatar,
                           app_directory + url_for('static', filename='img/' + username + '.png'))
 
             user.username = username
@@ -145,7 +138,7 @@ def edit_profile():
 
         return redirect(url_for('profile'))
 
-    return render_template('edit_profile.html', user=g.user, avatar=get_avatar())
+    return render_template('edit_profile.html', form=form, avatar=g.user.get_avatar())
 
 
 @application.route('/about', methods=['GET'])

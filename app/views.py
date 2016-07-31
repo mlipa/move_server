@@ -22,6 +22,7 @@ def home():
     return redirect(url_for('sign_in'))
 
 
+# TODO: CHECK THIS FUNCTION, DOUBLE VALIDATION & CHANGE TO FLASK-WTF FORM
 @application.route('/sign_in', methods=['GET', 'POST'])
 def sign_in():
     if request.method == 'POST':
@@ -56,7 +57,8 @@ def dashboard():
     return render_template('dashboard.html')
 
 
-@application.route('/settings', methods=['GET'])
+# TODO: ADD POST FUNCTIONALITY & CHANGE TO FLASK-WTF FORM
+@application.route('/settings', methods=['GET', 'POST'])
 @login_required
 def settings():
     return render_template('settings.html')
@@ -77,6 +79,7 @@ def profile():
     return render_template('profile.html', user=g.user)
 
 
+# TODO: CHECK THIS FUNCTION, DOUBLE VALIDATION
 @application.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
@@ -138,7 +141,7 @@ def edit_profile():
 
         return redirect(url_for('profile'))
 
-    return render_template('edit_profile.html', form=form, avatar=g.user.get_avatar())
+    return render_template('edit_profile.html', form=form, user=g.user)
 
 
 @application.route('/about', methods=['GET'])

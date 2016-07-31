@@ -6,6 +6,7 @@ import os
 project_directory = os.path.abspath(os.path.dirname(__file__))
 
 
+# TODO: CHECK CONFIGURATION FOR FLASK-WTF
 class Configuration(object):
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(project_directory, 'move.db')

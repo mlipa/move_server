@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# coding: utf-8
+
 from flask_wtf import Form
 from flask_wtf.html5 import EmailField
 from wtforms import FileField, PasswordField, StringField

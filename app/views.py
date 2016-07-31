@@ -52,6 +52,7 @@ def sign_in():
 
 
 @application.route('/sign_out', methods=['GET'])
+@login_required
 def sign_out():
     logged_name = str(g.user.name)
 

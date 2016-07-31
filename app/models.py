@@ -11,7 +11,7 @@ from app import database
 class Settings(database.Model):
     id = database.Column(database.Integer, primary_key=True)
     name = database.Column(database.String(32), index=False, unique=True)
-    users = database.relationship('User', backref='user', lazy='dynamic')
+    users = database.relationship('Users', backref='users', lazy='dynamic')
 
     def get_id(self):
         return unicode(self.id)

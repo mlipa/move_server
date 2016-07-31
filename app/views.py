@@ -74,7 +74,7 @@ def profile():
 
         return redirect(url_for('sign_in'))
 
-    return render_template('profile.html', user=g.user, avatar=g.user.get_avatar())
+    return render_template('profile.html', user=g.user)
 
 
 @application.route('/edit_profile', methods=['GET', 'POST'])
@@ -87,13 +87,13 @@ def edit_profile():
     form.email.render_kw['placeholder'] = g.user.email
 
     if request.method == 'POST' and form.validate_on_submit():
-        name = unicode(request.form['name'])
-        username = unicode(request.form['username'])
-        email = unicode(request.form['email'])
-        old_password = unicode(request.form['old_password'])
-        new_password = unicode(request.form['new_password'])
-        confirm_new_password = unicode(request.form['confirm_new_password'])
-        avatar = unicode(request.form['avatar'])
+        name = unicode(form.name.data)
+        username = unicode(form.username.data)
+        email = unicode(form.email.data)
+        old_password = unicode(form.old_password.data)
+        new_password = unicode(form.new_password.data)
+        confirm_new_password = unicode(form.confirm_new_password.data)
+        avatar = form.avatar.data
 
         user = models.Users.query.filter_by(id=g.user.id).first()
 

@@ -9,7 +9,7 @@
 {% block content %}
     <h3 class="page-header">Profile</h3>
     <div class="col-md-2">
-        <img class="img-avatar img-circle img-responsive center-block" src="{{ avatar }}">
+        <img class="img-avatar img-circle img-responsive center-block" src="{{ user.get_avatar() }}">
     </div>
     <div class="col-md-10">
         <form class="form-horizontal" method="post">

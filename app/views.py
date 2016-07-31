@@ -51,6 +51,17 @@ def sign_in():
     return render_template('sign_in.html')
 
 
+@application.route('/sign_out', methods=['GET'])
+def sign_out():
+    logged_name = str(g.user.name)
+
+    logout_user()
+
+    flash(Markup('<strong>Bye, bye ' + logged_name + '!</strong> Come back soon!'), 'success')
+
+    return redirect(url_for('sign_in'))
+
+
 @application.route('/dashboard', methods=['GET'])
 @login_required
 def dashboard():
@@ -67,15 +78,6 @@ def settings():
 @application.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
-    if request.method == 'POST':
-        logged_name = str(g.user.name)
-
-        logout_user()
-
-        flash(Markup('<strong>Bye, bye ' + logged_name + '!</strong> Come back soon!'), 'success')
-
-        return redirect(url_for('sign_in'))
-
     return render_template('profile.html', user=g.user)
 
 

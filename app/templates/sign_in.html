@@ -11,17 +11,15 @@
 </head>
 <body>
 <div class="container">
-    {# TODO: CHANGE TO FLASK-WTF FORM #}
-    <form class="form-signin" method="post">
+    <form role="form" class="form-signin" data-toggle="validator" method="post">
+        {{ form.csrf_token }}
         <h2 class="form-signin-heading"><img class="img-logo"
                                              src="{{ url_for('static', filename='img/logo.png') }}"> Move</h2>
         <br>
-        <label for="input_username" class="sr-only">Username</label>
-        <input type="text" id="input_username" class="form-control" placeholder="Username" name="username"
-               value="{{ request.form.username }}" autofocus>
-        <label for="input_password" class="sr-only">Password</label>
-        <input type="password" id="input_password" class="form-control" placeholder="Password" name="password"
-               value="{{ request.form.password }}">
+        <label for="username" class="sr-only">Username</label>
+        {{ form.username(autofocus=true) }}
+        <label for="password" class="sr-only">Password</label>
+        {{ form.password }}
         <br>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
     </form>

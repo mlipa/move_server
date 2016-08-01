@@ -9,6 +9,7 @@
 {% block content %}
     <h3 class="page-header">Change personal data</h3>
     <form role="form" class="form-horizontal" data-toggle="validator" method="post">
+        {{ form.csrf_token }}
         <div class="form-group">
             <label for="name" class="col-md-2 control-label">Name:</label>
             <div class="col-md-3">

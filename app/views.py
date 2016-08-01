@@ -7,7 +7,7 @@ from flask import flash, g, Markup, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 
 from app import application, database, hashing, login_manager, models
-from forms import UserForm
+from forms import LoginForm, UserForm
 
 USER_SALT_LENGTH = models.Users.salt.property.columns[0].type.length
 
@@ -22,12 +22,14 @@ def home():
     return redirect(url_for('sign_in'))
 
 
-# TODO: CHECK THIS FUNCTION, DOUBLE VALIDATION & CHANGE TO FLASK-WTF FORM
+# TODO: CHECK THIS FUNCTION & DOUBLE VALIDATION
 @application.route('/sign_in', methods=['GET', 'POST'])
 def sign_in():
-    if request.method == 'POST':
-        username = unicode(request.form['username'])
-        password = unicode(request.form['password'])
+    login_form = LoginForm()
+
+    if login_form.validate_on_submit():
+        username = unicode(login_form.username.data)
+        password = unicode(login_form.password.data)
 
         if username is None or not username:
             flash(Markup('<strong>Psst!</strong> You forgot username.'), 'warning')
@@ -48,7 +50,7 @@ def sign_in():
 
                     return redirect(url_for('dashboard'))
 
-    return render_template('sign_in.html')
+    return render_template('sign_in.html', form=login_form)
 
 
 @application.route('/sign_out', methods=['GET'])
@@ -86,20 +88,20 @@ def profile():
 @application.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
-    form = UserForm()
+    user_form = UserForm()
 
-    form.name.render_kw['placeholder'] = g.user.name
-    form.username.render_kw['placeholder'] = g.user.username
-    form.email.render_kw['placeholder'] = g.user.email
+    user_form.name.render_kw['placeholder'] = g.user.name
+    user_form.username.render_kw['placeholder'] = g.user.username
+    user_form.email.render_kw['placeholder'] = g.user.email
 
-    if request.method == 'POST' and form.validate_on_submit():
-        name = unicode(form.name.data)
-        username = unicode(form.username.data)
-        email = unicode(form.email.data)
-        old_password = unicode(form.old_password.data)
-        new_password = unicode(form.new_password.data)
-        confirm_new_password = unicode(form.confirm_new_password.data)
-        avatar = form.avatar.data
+    if user_form.validate_on_submit():
+        name = unicode(user_form.name.data)
+        username = unicode(user_form.username.data)
+        email = unicode(user_form.email.data)
+        old_password = unicode(user_form.old_password.data)
+        new_password = unicode(user_form.new_password.data)
+        confirm_new_password = unicode(user_form.confirm_new_password.data)
+        avatar = user_form.avatar.data
 
         user = models.Users.query.filter_by(id=g.user.id).first()
 
@@ -144,7 +146,7 @@ def edit_profile():
 
         return redirect(url_for('profile'))
 
-    return render_template('edit_profile.html', form=form, user=g.user)
+    return render_template('edit_profile.html', form=user_form, user=g.user)
 
 
 @application.route('/about', methods=['GET'])

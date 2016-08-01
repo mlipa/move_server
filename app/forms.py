@@ -14,6 +14,15 @@ USER_NAME_LENGTH = models.Users.name.property.columns[0].type.length
 USER_EMAIL_LENGTH = models.Users.email.property.columns[0].type.length
 
 
+class LoginForm(Form):
+    username = StringField('username', render_kw={'class': 'form-control', 'maxlength': USER_USERNAME_LENGTH,
+                                                  'placeholder': 'Username'},
+                           validators=[Length(max=USER_USERNAME_LENGTH)])
+    password = PasswordField('password', render_kw={'class': 'form-control', 'maxlength': USER_PASSWORD_LENGTH,
+                                                    'placeholder': 'Password'},
+                             validators=[Length(max=USER_PASSWORD_LENGTH)])
+
+
 class UserForm(Form):
     name = StringField('name', render_kw={'class': 'form-control', 'maxlength': USER_NAME_LENGTH},
                        validators=[Length(max=USER_NAME_LENGTH)])

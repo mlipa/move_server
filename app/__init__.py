@@ -9,7 +9,7 @@ from flask_sqlalchemy import SQLAlchemy
 from configuration import Configuration
 
 application = Flask(__name__)
-application.secret_key = 'secret_key'
+application.secret_key = 'JqhsGUN1rdi0azQZDIrBMyGNE3TS3TPl'
 application.config.from_object(Configuration)
 
 hashing = Hashing(application)

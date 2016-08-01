@@ -3,7 +3,7 @@
 
 import os
 
-from flask import flash, g, Markup, redirect, render_template, request, url_for
+from flask import flash, g, Markup, redirect, render_template, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 
 from app import application, database, hashing, login_manager, models
@@ -81,7 +81,7 @@ def settings():
 @application.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
-    return render_template('profile.html', user=g.user)
+    return render_template('profile.html')
 
 
 # TODO: CHECK THIS FUNCTION, DOUBLE VALIDATION
@@ -146,7 +146,7 @@ def edit_profile():
 
         return redirect(url_for('profile'))
 
-    return render_template('edit_profile.html', form=user_form, user=g.user)
+    return render_template('edit_profile.html', form=user_form)
 
 
 @application.route('/about', methods=['GET'])

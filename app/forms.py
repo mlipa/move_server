@@ -4,7 +4,6 @@
 from flask_wtf import Form
 from flask_wtf.html5 import EmailField
 from wtforms import FileField, PasswordField, StringField
-from wtforms.validators import Length
 
 from app import models
 
@@ -15,29 +14,32 @@ USER_EMAIL_LENGTH = models.Users.email.property.columns[0].type.length
 
 
 class LoginForm(Form):
-    username = StringField('username', render_kw={'class': 'form-control', 'maxlength': USER_USERNAME_LENGTH,
-                                                  'placeholder': 'Username'},
-                           validators=[Length(max=USER_USERNAME_LENGTH)])
-    password = PasswordField('password', render_kw={'class': 'form-control', 'maxlength': USER_PASSWORD_LENGTH,
-                                                    'placeholder': 'Password'},
-                             validators=[Length(max=USER_PASSWORD_LENGTH)])
+    username = StringField('username', render_kw={'class': 'form-control', 'placeholder': 'Username'})
+    password = PasswordField('password', render_kw={'class': 'form-control', 'placeholder': 'Password'})
 
 
 class UserForm(Form):
-    name = StringField('name', render_kw={'class': 'form-control', 'maxlength': USER_NAME_LENGTH},
-                       validators=[Length(max=USER_NAME_LENGTH)])
-    username = StringField('username', render_kw={'class': 'form-control', 'maxlength': USER_USERNAME_LENGTH},
-                           validators=[Length(max=USER_USERNAME_LENGTH)])
-    email = EmailField('email', render_kw={'class': 'form-control', 'maxlength': USER_EMAIL_LENGTH},
-                       validators=[Length(max=USER_EMAIL_LENGTH)])
-    old_password = PasswordField('old_password', render_kw={'class': 'form-control', 'maxlength': USER_PASSWORD_LENGTH,
-                                                            'placeholder': 'Enter old password'},
-                                 validators=[Length(max=USER_PASSWORD_LENGTH)])
-    new_password = PasswordField('new_password', render_kw={'class': 'form-control', 'maxlength': USER_PASSWORD_LENGTH,
-                                                            'placeholder': 'Enter new password'},
-                                 validators=[Length(max=USER_PASSWORD_LENGTH)])
-    confirm_new_password = PasswordField('confirm_new_password',
-                                         render_kw={'class': 'form-control', 'maxlength': USER_PASSWORD_LENGTH,
-                                                    'placeholder': 'Confirm new password'},
-                                         validators=[Length(max=USER_PASSWORD_LENGTH)])
+    name = StringField('name', render_kw={'class': 'form-control', 'maxlength': USER_NAME_LENGTH,
+                                          'pattern': '^[A-z]+( [A-z]+)*( [A-z]+)?(-[A-z]+)?$',
+                                          'data-pattern-error': 'Whoops! The name can contain only words with "A-z" letters, " " between words and "-" in last name.'})
+    username = StringField('username', render_kw={'class': 'form-control', 'maxlength': USER_USERNAME_LENGTH,
+                                                  'pattern': '^[a-z0-9]+([._-][a-z0-9]+)*$',
+                                                  'data-pattern-error': 'Whoops! The username can contain only word with "a-z" letters or "0-9" digits, ".", "-" or "_" between characters.',
+                                                  'data-remote': '/validate',
+                                                  'data-remote-error': 'Whoops! The username chosen by other user!'})
+    email = EmailField('email', render_kw={'class': 'form-control', 'maxlength': USER_EMAIL_LENGTH,
+                                           'data-error': "Whoops! This isn't the e-mail address.",
+                                           'pattern': '^[a-z0-9]+([._-][a-z0-9]+)*@[a-z0-9]+([._-][a-z0-9]+)*\.[a-z]{2,4}$',
+                                           'data-pattern-error': 'Whoops! The e-mail can contain only address with "a-z" letters or "0-9" digits, "@", ".", "-" or "_" between characters',
+                                           'data-remote': '/validate',
+                                           'data-remote-error': 'Whoops! The e-mail chosen by other user!'})
+    old_password = PasswordField('old_password',
+                                 render_kw={'class': 'form-control', 'placeholder': 'Enter old password',
+                                            'maxlength': USER_PASSWORD_LENGTH, 'data-remote': '/validate',
+                                            'data-remote-error': "Whoops! The old password don't match.",
+                                            'data-required-error': 'Whoops! The old password is required to edit profile.'})
+    new_password = PasswordField('new_password',
+                                 render_kw={'class': 'form-control', 'placeholder': 'Enter new password',
+                                            'maxlength': USER_PASSWORD_LENGTH})
+    # TODO: ADD AVATAR FUNCTIONALITY
     avatar = FileField('avatar', render_kw={'class': 'form-control-file'})

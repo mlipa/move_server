@@ -2,8 +2,10 @@
 # coding: utf-8
 
 import os
+import random
+import string
 
-from flask import flash, g, Markup, redirect, render_template, url_for
+from flask import flash, g, Markup, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 
 from app import application, database, hashing, login_manager, models
@@ -22,7 +24,6 @@ def home():
     return redirect(url_for('sign_in'))
 
 
-# TODO: CHECK THIS FUNCTION & DOUBLE VALIDATION
 @application.route('/sign_in', methods=['GET', 'POST'])
 def sign_in():
     login_form = LoginForm()
@@ -31,23 +32,24 @@ def sign_in():
         username = unicode(login_form.username.data)
         password = unicode(login_form.password.data)
 
-        if username is None or not username:
+        if not username:
             flash(Markup('<strong>Psst!</strong> You forgot username.'), 'warning')
-        elif password is None or not password:
+        elif not password:
             flash(Markup('<strong>Psst!</strong> You forgot password.'), 'warning')
         else:
             user = models.Users.query.filter_by(username=username).first()
 
-            if user is None:
-                flash(Markup("<strong>Oops!</strong> The username and password don't match."), 'danger')
+            if not user:
+                flash(Markup("<strong>Whops!</strong> The username and password don't match."), 'danger')
             else:
                 if not hashing.check_value(user.password, password, user.salt):
-                    flash(Markup("<strong>Oops!</strong> The username and password don't match."), 'danger')
+                    flash(Markup("<strong>Whops!</strong> The username and password don't match."), 'danger')
                 elif not login_user(user):
                     flash(Markup('<strong>Ugh!</strong> ' + str(user.name) + ', your account is banned.'), 'danger')
                 else:
                     flash(Markup('<strong>Welcome ' + str(g.user.name) + '!</strong>'), 'success')
 
+                    # TODO: REDIRECT TO "NEXT"
                     return redirect(url_for('dashboard'))
 
     return render_template('sign_in.html', form=login_form)
@@ -56,11 +58,11 @@ def sign_in():
 @application.route('/sign_out', methods=['GET'])
 @login_required
 def sign_out():
-    logged_name = str(g.user.name)
+    logged_name = g.user.name
 
     logout_user()
 
-    flash(Markup('<strong>Bye, bye ' + logged_name + '!</strong> Come back soon!'), 'success')
+    flash(Markup('<strong>Bye, bye ' + str(logged_name) + '!</strong> Come back soon!'), 'success')
 
     return redirect(url_for('sign_in'))
 
@@ -78,13 +80,12 @@ def settings():
     return render_template('settings.html')
 
 
-@application.route('/profile', methods=['GET', 'POST'])
+@application.route('/profile', methods=['GET'])
 @login_required
 def profile():
     return render_template('profile.html')
 
 
-# TODO: CHECK THIS FUNCTION, DOUBLE VALIDATION
 @application.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
@@ -100,49 +101,36 @@ def edit_profile():
         email = unicode(user_form.email.data)
         old_password = unicode(user_form.old_password.data)
         new_password = unicode(user_form.new_password.data)
-        confirm_new_password = unicode(user_form.confirm_new_password.data)
+        # TODO: CHECK IF ".data" IS RIGTH PROPERTY
         avatar = user_form.avatar.data
 
-        user = models.Users.query.filter_by(id=g.user.id).first()
+        user = models.Users.query.get(g.user.id)
 
-        if name == user.name:
-            flash(Markup('<strong>Oops!</strong> The given name was the same as your current one.'), 'warning')
-        elif not name is None and name:
+        if name and name != user.name:
             user.name = name
 
-            flash(Markup('<strong>Hello ' + str(name) + '!</strong> Your name has been changed successfully!'),
-                  'success')
+        if username and username != user.username:
+            avatar = g.user.get_avatar()
 
-        if username == user.username:
-            flash(Markup('<strong>Oops!</strong> The given username was the same as your current one.'), 'warning')
-        elif username == 'default_avatar' or username == 'admin':
-            flash(Markup('<strong>Error!</strong> The given username is restricted.'), 'danger')
-        elif models.Users.query.filter_by(username=username).first():
-            flash(Markup('<strong>Bad luck!</strong> The given username is reserved by another user.'), 'danger')
-        elif not username is None and username:
-            app_directory = os.path.abspath(os.path.dirname(__file__))
-            avatar = g.userget_avatar()
-
-            if g.user.username in avatar:
+            if str(user.username) in avatar:
+                app_directory = os.path.abspath(os.path.dirname(__file__))
                 os.rename(app_directory + avatar,
                           app_directory + url_for('static', filename='img/' + username + '.png'))
 
             user.username = username
 
-            flash(Markup('<strong>Hello ' + str(username) + '!</strong> Your username has been changed successfully!'),
-                  'success')
-
-        if email == user.email:
-            flash(Markup('<strong>Oops!</strong> The given e-mail was the same as your current one.'), 'warning')
-        elif models.Users.query.filter_by(email=email).first():
-            flash(Markup('<strong>Bad luck!</strong> The given e-mail is reserved by another user.'), 'danger')
-        elif not email is None and email:
+        if email and email != user.email:
             user.email = email
 
-            flash(Markup('<strong>Hello ' + str(email) + '!</strong> Your e-mail has been changed successfully!'),
-                  'success')
+        if new_password:
+            user.salt = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(USER_SALT_LENGTH))
+            user.password = hashing.hash_value(new_password, user.salt)
+
+        # TODO: CHANGE AVATAR
 
         database.session.commit()
+
+        flash(Markup('<strong>Yahoo!</strong> All data has been changed successfully!'), 'success')
 
         return redirect(url_for('profile'))
 
@@ -153,6 +141,26 @@ def edit_profile():
 @login_required
 def about():
     return render_template('about.html')
+
+
+@application.route('/validate', methods=['GET'])
+def validate():
+    if request.args.get('username') != g.user.username:
+        username = request.args.get('username')
+
+        if models.Users.query.filter_by(username=username).first() or username in ['admin', 'default_avatar']:
+            return redirect(url_for('edit_profile')), 406
+
+    if request.args.get('email') != g.user.email:
+        email = request.args.get('email')
+
+        if models.Users.query.filter_by(email=email).first():
+            return redirect(url_for('edit_profile')), 406
+
+    if request.args.get('old_password') and not hashing.check_value(g.user.password, request.args.get('old_password'), g.user.salt):
+        return redirect(url_for('edit_profile')), 406
+
+    return redirect(url_for('edit_profile')), 200
 
 
 @login_manager.user_loader

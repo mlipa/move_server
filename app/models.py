@@ -46,10 +46,10 @@ class Users(database.Model):
 
     def get_avatar(self):
         app_directory = os.path.abspath(os.path.dirname(__file__))
-        avatar = url_for('static', filename='img/' + self.username + '.png')
+        avatar = url_for('static', filename='img/avatars/' + str(self.id) + '.png')
 
         if not os.path.exists(app_directory + avatar):
-            avatar = url_for('static', filename='img/default_avatar.png')
+            avatar = url_for('static', filename='img/avatars/default.png')
 
         return avatar
 

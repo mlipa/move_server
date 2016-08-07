@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-import os
 import random
 import string
 
@@ -99,7 +98,6 @@ def edit_profile():
         name = unicode(user_form.name.data)
         username = unicode(user_form.username.data)
         email = unicode(user_form.email.data)
-        old_password = unicode(user_form.old_password.data)
         new_password = unicode(user_form.new_password.data)
         # TODO: CHECK IF ".data" IS RIGTH PROPERTY
         avatar = user_form.avatar.data
@@ -110,13 +108,6 @@ def edit_profile():
             user.name = name
 
         if username and username != user.username:
-            avatar = g.user.get_avatar()
-
-            if str(user.username) in avatar:
-                app_directory = os.path.abspath(os.path.dirname(__file__))
-                os.rename(app_directory + avatar,
-                          app_directory + url_for('static', filename='img/' + username + '.png'))
-
             user.username = username
 
         if email and email != user.email:
@@ -126,9 +117,9 @@ def edit_profile():
             user.salt = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(USER_SALT_LENGTH))
             user.password = hashing.hash_value(new_password, user.salt)
 
-        # TODO: CHANGE AVATAR
-
         database.session.commit()
+
+        # TODO: CHANGE AVATAR
 
         flash(Markup('<strong>Yahoo!</strong> All data has been changed successfully!'), 'success')
 
@@ -145,19 +136,16 @@ def about():
 
 @application.route('/validate', methods=['GET'])
 def validate():
-    if request.args.get('username') != g.user.username:
-        username = request.args.get('username')
+    if request.args.get('username') != g.user.username \
+            and models.Users.query.filter_by(username=request.args.get('username')).first():
+        return redirect(url_for('edit_profile')), 406
 
-        if models.Users.query.filter_by(username=username).first() or username in ['admin', 'default_avatar']:
-            return redirect(url_for('edit_profile')), 406
+    if request.args.get('email') != g.user.email \
+            and models.Users.query.filter_by(email=request.args.get('email')).first():
+        return redirect(url_for('edit_profile')), 406
 
-    if request.args.get('email') != g.user.email:
-        email = request.args.get('email')
-
-        if models.Users.query.filter_by(email=email).first():
-            return redirect(url_for('edit_profile')), 406
-
-    if request.args.get('old_password') and not hashing.check_value(g.user.password, request.args.get('old_password'), g.user.salt):
+    if request.args.get('old_password') \
+            and not hashing.check_value(g.user.password, request.args.get('old_password'), g.user.salt):
         return redirect(url_for('edit_profile')), 406
 
     return redirect(url_for('edit_profile')), 200

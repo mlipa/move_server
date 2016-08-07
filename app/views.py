@@ -48,8 +48,8 @@ def sign_in():
                 else:
                     flash(Markup('<strong>Welcome ' + str(g.user.name) + '!</strong>'), 'success')
 
-                    # TODO: REDIRECT TO "NEXT"
-                    return redirect(url_for('dashboard'))
+                    return redirect(request.args.get('next')) if request.args.get('next') \
+                        else redirect(url_for('dashboard'))
 
     return render_template('sign_in.html', form=login_form)
 

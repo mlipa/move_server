@@ -18,7 +18,7 @@ class LoginForm(Form):
     password = PasswordField('password', render_kw={'class': 'form-control', 'placeholder': 'Password'})
 
 
-class UserForm(Form):
+class DataForm(Form):
     name = StringField('name', render_kw={'class': 'form-control', 'maxlength': USER_NAME_LENGTH,
                                           'pattern': '^[A-z]+( [A-z]+)*( [A-z]+)?(-[A-z]+)?$',
                                           'data-pattern-error': 'Whoops! The name can contain only words with "A-z" letters, " " between words and "-" in last name.'})
@@ -33,13 +33,21 @@ class UserForm(Form):
                                            'data-pattern-error': 'Whoops! The e-mail can contain only address with "a-z" letters or "0-9" digits, "@", ".", "-" or "_" between characters',
                                            'data-remote': '/validate',
                                            'data-remote-error': 'Whoops! The e-mail chosen by other user!'})
+    avatar = FileField('avatar', render_kw={'class': 'form-control-file'})
+
+
+class PasswordForm(Form):
     old_password = PasswordField('old_password',
                                  render_kw={'class': 'form-control', 'placeholder': 'Enter old password',
                                             'maxlength': USER_PASSWORD_LENGTH, 'data-remote': '/validate',
                                             'data-remote-error': "Whoops! The old password don't match.",
-                                            'data-required-error': 'Whoops! The old password is required to edit profile.'})
-    new_password = PasswordField('new_password',
-                                 render_kw={'class': 'form-control', 'placeholder': 'Enter new password',
-                                            'maxlength': USER_PASSWORD_LENGTH})
-    # TODO: ADD AVATAR FUNCTIONALITY
-    avatar = FileField('avatar', render_kw={'class': 'form-control-file'})
+                                            'data-required-error': 'Whoops! The old password is required to change password.'})
+    new_password = PasswordField('new_password', render_kw={'id': 'new_password', 'class': 'form-control',
+                                                            'placeholder': 'Enter new password',
+                                                            'maxlength': USER_PASSWORD_LENGTH,
+                                                            'data-required-error': 'Whoops! The new password is required to change password.'})
+    confirm_new_password = PasswordField('confirm_new_password',
+                                         render_kw={'class': 'form-control', 'placeholder': 'Confirm new password',
+                                                    'maxlength': USER_PASSWORD_LENGTH, 'data-match': '#new_password',
+                                                    'data-match-error': "Whoops! These passwords don't match.",
+                                                    'data-required-error': 'Whoops! The confirmation of new password is required to change password.'})

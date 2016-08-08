@@ -8,7 +8,7 @@ from flask import flash, g, Markup, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 
 from app import application, database, hashing, login_manager, models
-from forms import LoginForm, UserForm
+from forms import DataForm, LoginForm, PasswordForm
 
 USER_SALT_LENGTH = models.Users.salt.property.columns[0].type.length
 
@@ -88,19 +88,20 @@ def profile():
 @application.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
-    user_form = UserForm()
+    data_form = DataForm()
+    password_form = PasswordForm()
 
-    user_form.name.render_kw['placeholder'] = g.user.name
-    user_form.username.render_kw['placeholder'] = g.user.username
-    user_form.email.render_kw['placeholder'] = g.user.email
+    data_form.name.render_kw['placeholder'] = g.user.name
+    data_form.username.render_kw['placeholder'] = g.user.username
+    data_form.email.render_kw['placeholder'] = g.user.email
 
-    if user_form.validate_on_submit():
-        name = unicode(user_form.name.data)
-        username = unicode(user_form.username.data)
-        email = unicode(user_form.email.data)
-        new_password = unicode(user_form.new_password.data)
+    if data_form.validate_on_submit():
+        name = unicode(data_form.name.data)
+        username = unicode(data_form.username.data)
+        email = unicode(data_form.email.data)
+        new_password = unicode(password_form.new_password.data)
         # TODO: CHECK IF ".data" IS RIGTH PROPERTY
-        avatar = user_form.avatar.data
+        avatar = data_form.avatar.data
 
         user = models.Users.query.get(g.user.id)
 
@@ -121,11 +122,12 @@ def edit_profile():
 
         # TODO: CHANGE AVATAR
 
-        flash(Markup('<strong>Yahoo!</strong> All data has been changed successfully!'), 'success')
+        if name == user.name or username == user.username or email == user.email:
+            flash(Markup('<strong>Yahoo!</strong> All data has been changed successfully!'), 'success')
 
         return redirect(url_for('profile'))
 
-    return render_template('edit_profile.html', form=user_form)
+    return render_template('edit_profile.html', data_form=data_form, password_form=password_form)
 
 
 @application.route('/about', methods=['GET'])

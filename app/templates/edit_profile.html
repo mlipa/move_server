@@ -7,13 +7,13 @@
 {% endblock %}
 
 {% block content %}
-    <form role="form" class="form-horizontal" data-toggle="validator" enctype="multipart/form-data" method="post">
-        {{ form.csrf_token }}
+    <form role="form" class="form-horizontal" data-toggle="validator" method="post">
+        {{ data_form.csrf_token }}
         <h3 class="page-header">Change personal data</h3>
         <div class="form-group has-feedback">
             <label for="name" class="col-md-2 control-label">Name:</label>
             <div class="col-md-3">
-                {{ form.name(autofocus=true) }}
+                {{ data_form.name(autofocus=true) }}
                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                 <div class="help-block with-errors"></div>
             </div>
@@ -21,7 +21,7 @@
         <div class="form-group has-feedback">
             <label for="username" class="col-md-2 control-label">Username:</label>
             <div class="col-md-3">
-                {{ form.username }}
+                {{ data_form.username }}
                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                 <div class="help-block with-errors"></div>
             </div>
@@ -29,16 +29,22 @@
         <div class="form-group has-feedback">
             <label for="email" class="col-md-2 control-label">E-mail:</label>
             <div class="col-md-3">
-                {{ form.email }}
+                {{ data_form.email }}
                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                 <div class="help-block with-errors"></div>
             </div>
         </div>
+        <div class="col-md-12">
+            <button class="btn btn-primary pull-right" type="submit">Save</button>
+        </div>
+    </form>
+    <form role="form" class="form-horizontal" data-toggle="validator" method="post">
+        {{ password_form.csrf_token }}
         <h3 class="page-header">Change password</h3>
         <div class="form-group has-feedback">
             <label for="old_password" class="col-md-2 control-label">Old password:</label>
             <div class="col-md-3">
-                {{ form.old_password(required=true) }}
+                {{ password_form.old_password(required=true) }}
                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                 <div class="help-block with-errors"></div>
             </div>
@@ -46,18 +52,32 @@
         <div class="form-group has-feedback">
             <label for="new_password" class="col-md-2 control-label">New password:</label>
             <div class="col-md-3">
-                {{ form.new_password }}
+                {{ password_form.new_password(required=true) }}
                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                 <div class="help-block with-errors"></div>
             </div>
         </div>
+        <div class="form-group has-feedback">
+            <label for="confirm_new_password" class="col-md-2 control-label">Confirm new password:</label>
+            <div class="col-md-3">
+                {{ password_form.confirm_new_password(required=true) }}
+                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <button class="btn btn-primary pull-right" type="submit">Save</button>
+        </div>
+    </form>
+    <form role="form" class="form-horizontal" data-toggle="validator" enctype="multipart/form-data" method="post">
+        {{ data_form.csrf_token }}
         <h3 class="page-header">Change avatar</h3>
         <div class="col-md-2">
             <img class="img-avatar img-circle img-responsive center-block" src="{{ g.user.get_avatar() }}">
         </div>
         <div class="col-md-3">
             <div class="form-group">
-                {{ form.avatar }}
+                {{ data_form.avatar(required=true) }}
                 <small class="text-muted">
                     *.png is the only acceptable type of picture.<br>
                     Best avatar appearance is obtained using 1:1 pixel resolution.

@@ -13,3 +13,4 @@ class Configuration(object):
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(project_directory, 'move.db')
     SQLALCHEMY_MIGRATE_REPO = os.path.join(project_directory, 'database')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    UPLOADED_AVATARS_DEST = os.path.join(project_directory, 'app/static/img/avatars')

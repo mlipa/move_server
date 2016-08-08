@@ -5,6 +5,7 @@ from flask import Flask, Markup
 from flask_hashing import Hashing
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
+from flask_uploads import configure_uploads, patch_request_class, UploadSet
 
 from configuration import Configuration
 
@@ -21,5 +22,9 @@ login_manager.login_message_category = 'info'
 login_manager.init_app(application)
 
 database = SQLAlchemy(application)
+
+avatars = UploadSet('avatars', 'png')
+configure_uploads(application, avatars)
+patch_request_class(application, 5 * 1024 * 1024)
 
 from app import views, models

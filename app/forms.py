@@ -33,7 +33,7 @@ class DataForm(Form):
                                            'data-pattern-error': 'Whoops! The e-mail can contain only address with "a-z" letters or "0-9" digits, "@", ".", "-" or "_" between characters',
                                            'data-remote': '/validate',
                                            'data-remote-error': 'Whoops! The e-mail chosen by other user!'})
-    avatar = FileField('avatar', render_kw={'class': 'form-control-file'})
+    avatar = FileField('avatar', render_kw={'class': 'form-control-file', 'accept': 'image/png'})
 
 
 class PasswordForm(Form):

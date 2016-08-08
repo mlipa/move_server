@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import os
 import random
 import string
 
 from flask import flash, g, Markup, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 
-from app import application, database, hashing, login_manager, models
+from app import application, avatars, database, hashing, login_manager, models
 from forms import DataForm, LoginForm, PasswordForm
 
 USER_SALT_LENGTH = models.Users.salt.property.columns[0].type.length
@@ -100,8 +101,6 @@ def edit_profile():
         username = unicode(data_form.username.data)
         email = unicode(data_form.email.data)
         new_password = unicode(password_form.new_password.data)
-        # TODO: CHECK IF ".data" IS RIGTH PROPERTY
-        avatar = data_form.avatar.data
 
         user = models.Users.query.get(g.user.id)
 
@@ -120,10 +119,22 @@ def edit_profile():
 
         database.session.commit()
 
-        # TODO: CHANGE AVATAR
+        if 'avatar' in request.files and avatars.extension_allowed(request.files['avatar'].filename.rsplit('.', 1)[1]):
+            avatar_path = os.path.abspath(os.path.dirname(__file__)) + \
+                          url_for('static', filename='img/avatars/' + str(g.user.id) + '.png')
 
-        if name == user.name or username == user.username or email == user.email:
-            flash(Markup('<strong>Yahoo!</strong> All data has been changed successfully!'), 'success')
+            if os.path.isfile(avatar_path):
+                os.remove(avatar_path)
+
+            avatars.save(request.files['avatar'], name=str(g.user.id) + '.png')
+        else:
+            flash(Markup("<strong>Whoops!</strong> Extension of the avatar isn't allowed."), 'danger')
+
+            return redirect(url_for('profile'))
+
+        if name or username or email or new_password or 'avatar' in request.files:
+            flash(Markup("<strong>Yahoo!</strong> All data has been changed successfully! If avatar doesn't change,"
+                         "please refresh the page!"), 'success')
 
         return redirect(url_for('profile'))
 

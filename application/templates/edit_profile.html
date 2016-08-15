@@ -1,36 +1,29 @@
-{% extends "base.html" %}
+{% extends "base_after.html" %}
 
 {% block title %} - Edit profile{% endblock %}
-
-{% block head %}
-    {{ super() }}
-{% endblock %}
 
 {% block content %}
     <form role="form" class="form-horizontal" data-toggle="validator" method="post">
         {{ data_form.csrf_token }}
-        <h3 class="page-header">Change personal data</h3>
-        <div class="form-group has-feedback">
+        <h3 class="page-header">Change data</h3>
+        <div class="form-group">
             <label for="name" class="col-md-2 control-label">Name:</label>
             <div class="col-md-3">
-                {{ data_form.name(autofocus=true) }}
-                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                {{ data_form.name }}
                 <div class="help-block with-errors"></div>
             </div>
         </div>
-        <div class="form-group has-feedback">
+        <div class="form-group">
             <label for="username" class="col-md-2 control-label">Username:</label>
             <div class="col-md-3">
                 {{ data_form.username }}
-                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                 <div class="help-block with-errors"></div>
             </div>
         </div>
-        <div class="form-group has-feedback">
+        <div class="form-group">
             <label for="email" class="col-md-2 control-label">E-mail:</label>
             <div class="col-md-3">
                 {{ data_form.email }}
-                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                 <div class="help-block with-errors"></div>
             </div>
         </div>
@@ -41,27 +34,24 @@
     <form role="form" class="form-horizontal" data-toggle="validator" method="post">
         {{ password_form.csrf_token }}
         <h3 class="page-header">Change password</h3>
-        <div class="form-group has-feedback">
+        <div class="form-group">
             <label for="old_password" class="col-md-2 control-label">Old password:</label>
             <div class="col-md-3">
                 {{ password_form.old_password(required=true) }}
-                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                 <div class="help-block with-errors"></div>
             </div>
         </div>
-        <div class="form-group has-feedback">
+        <div class="form-group">
             <label for="new_password" class="col-md-2 control-label">New password:</label>
             <div class="col-md-3">
                 {{ password_form.new_password(required=true) }}
-                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                 <div class="help-block with-errors"></div>
             </div>
         </div>
-        <div class="form-group has-feedback">
+        <div class="form-group">
             <label for="confirm_new_password" class="col-md-2 control-label">Confirm new password:</label>
             <div class="col-md-3">
                 {{ password_form.confirm_new_password(required=true) }}
-                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                 <div class="help-block with-errors"></div>
             </div>
         </div>
@@ -70,18 +60,20 @@
         </div>
     </form>
     <form role="form" class="form-horizontal" data-toggle="validator" enctype="multipart/form-data" method="post">
-        {{ data_form.csrf_token }}
+        {{ avatar_form.csrf_token }}
         <h3 class="page-header">Change avatar</h3>
-        <div class="col-md-2">
-            <img class="img-avatar img-circle img-responsive center-block" src="{{ g.user.get_avatar() }}">
-        </div>
-        <div class="col-md-3">
-            <div class="form-group">
-                {{ data_form.avatar(required=true) }}
+        <div class="form-group">
+            <div class="col-md-2">
+                <img class="img-avatar img-circle img-responsive center-block" src="{{ g.user.get_avatar() }}">
+            </div>
+            <div class="col-md-3">
+                {{ avatar_form.avatar(required=true) }}
                 <small class="text-muted">
-                    *.png is the only acceptable type of picture and 5 MB is the maximum picture size.<br>
+                    Acceptable type of picture: *.png. Maximum picture size: 5MB.
+                    <br>
                     Best avatar appearance is obtained using 1:1 pixel resolution.
                 </small>
+                <div class="help-block with-errors"></div>
             </div>
         </div>
         <div class="col-md-12">

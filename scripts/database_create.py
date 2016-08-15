@@ -5,7 +5,7 @@ import os
 
 from migrate.versioning import api
 
-from app import database
+from application import database
 from configuration import Configuration
 
 database.create_all()

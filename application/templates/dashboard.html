@@ -1,17 +1,14 @@
-{% extends "base.html" %}
+{% extends "base_after.html" %}
 
 {% block title %} - Dashboard{% endblock %}
 
-{% block head %}
-    {{ super() }}
-{% endblock %}
-
 {% block content %}
     <h3 class="page-header">Dashboard</h3>
-    {# TODO: ADD DASHBOARD TEMPLATE #}
+    {# TODO: DASHBOARD TEMPLATE #}
     <div class="col-md-12">
-        <img class="img-build img-responsive center-block" src="{{ url_for('static', filename='img/build.png') }}">
+        <img class="img-build img-responsive center-block" src="{{ url_for('static', filename='images/build.png') }}">
         <br>
         <p class="text-center"><strong>Be patient!</strong> The entire single team is building this site.</p>
     </div>
+    {# TODO: END #}
 {% endblock %}

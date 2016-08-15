@@ -16,8 +16,8 @@ application.config.from_object(Configuration)
 hashing = Hashing(application)
 
 login_manager = LoginManager()
-login_manager.login_view = 'sign_in'
-login_manager.login_message = Markup('<strong>Prohibited!</strong> Unless you have an account.')
+login_manager.login_view = 'log_in'
+login_manager.login_message = Markup('<strong>Hey you!</strong> Access only for logged in users.')
 login_manager.login_message_category = 'info'
 login_manager.init_app(application)
 
@@ -27,4 +27,4 @@ avatars = UploadSet('avatars', 'png')
 configure_uploads(application, avatars)
 patch_request_class(application, 5 * 1024 * 1024)
 
-from app import views, models
+from application import views, models

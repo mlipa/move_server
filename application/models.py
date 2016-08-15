@@ -5,16 +5,21 @@ import os
 
 from flask import url_for
 
-from app import database
+from application import database
+
+APPLICATION_DIRECTORY = os.path.abspath(os.path.dirname(__file__))
 
 
 class Settings(database.Model):
     id = database.Column(database.Integer, primary_key=True)
-    name = database.Column(database.String(32), index=False, unique=True)
+    name = database.Column(database.String(32), index=True, unique=True)
     users = database.relationship('Users', backref='setting', lazy='dynamic')
 
     def get_id(self):
         return unicode(self.id)
+
+    def __init__(self, name):
+        self.name = name
 
     def __repr__(self):
         return '<Setting %r>' % self.name
@@ -22,11 +27,11 @@ class Settings(database.Model):
 
 class Users(database.Model):
     id = database.Column(database.Integer, primary_key=True)
+    name = database.Column(database.String(64), index=True, unique=False)
     username = database.Column(database.String(32), index=True, unique=True)
+    email = database.Column(database.String(128), index=True, unique=True)
     password = database.Column(database.String(32), index=False, unique=False)
     salt = database.Column(database.String(8), index=False, unique=False)
-    name = database.Column(database.String(64), index=True, unique=False)
-    email = database.Column(database.String(128), index=True, unique=True)
     setting_id = database.Column(database.Integer, database.ForeignKey('settings.id'))
 
     @staticmethod
@@ -45,13 +50,20 @@ class Users(database.Model):
         return unicode(self.id)
 
     def get_avatar(self):
-        app_directory = os.path.abspath(os.path.dirname(__file__))
-        avatar = url_for('static', filename='img/avatars/' + str(self.id) + '.png')
+        avatar = url_for('static', filename='images/avatars/' + str(self.id) + '.png')
 
-        if not os.path.exists(app_directory + avatar):
-            avatar = url_for('static', filename='img/avatars/default.png')
+        if not os.path.exists(APPLICATION_DIRECTORY + avatar):
+            avatar = url_for('static', filename='images/avatars/default.png')
 
         return avatar
+
+    def __init__(self, name, username, email, password, salt):
+        self.name = name
+        self.username = username
+        self.email = email
+        self.password = password
+        self.salt = salt
+        self.setting_id = 1
 
     def __repr__(self):
         return '<User %r>' % self.username

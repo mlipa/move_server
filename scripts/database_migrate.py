@@ -5,7 +5,7 @@ import imp
 
 from migrate.versioning import api
 
-from app import database
+from application import database
 from configuration import Configuration
 
 version = api.db_version(Configuration.SQLALCHEMY_DATABASE_URI, Configuration.SQLALCHEMY_MIGRATE_REPO)

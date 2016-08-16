@@ -9,7 +9,7 @@ from flask import flash, g, Markup, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 
 from application import application, avatars, database, hashing, login_manager, models
-from forms import AvatarForm, DataForm, LogInForm, PasswordForm
+from forms import AvatarForm, DataForm, LogInForm, PasswordForm, SettingsForm
 
 APPLICATION_DIRECTORY = os.path.abspath(os.path.dirname(__file__))
 USER_SALT_LENGTH = models.Users.salt.property.columns[0].type.length
@@ -103,11 +103,26 @@ def dashboard():
     return render_template('dashboard.html')
 
 
-# TODO: SETTINGS FUNCTIONALITY
 @application.route('/settings', methods=['GET', 'POST'])
 @login_required
 def settings():
-    return render_template('settings.html')
+    settings_form = SettingsForm(prefix='sf')
+
+    if settings_form.validate_on_submit():
+        classifier = int(settings_form.classifier.data)
+
+        user = models.Users.query.get(g.user.get_id())
+
+        if classifier != user.classifier_id:
+            user.classifier_id = classifier
+
+        database.session.commit()
+
+        flash(Markup('<strong>Great!</strong> All settings has been changed successfully!'), 'success')
+
+    settings_form.classifier.data = str(g.user.classifier_id)
+
+    return render_template('settings.html', settings_form=settings_form)
 
 
 @application.route('/profile', methods=['GET'])

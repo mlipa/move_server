@@ -3,7 +3,7 @@
 
 from flask_wtf import Form
 from flask_wtf.html5 import EmailField
-from wtforms import FileField, PasswordField, StringField
+from wtforms import FileField, PasswordField, RadioField, StringField
 
 from application import models
 
@@ -18,7 +18,8 @@ class LogInForm(Form):
     password = PasswordField('password', render_kw={'class': 'form-control', 'maxlength': USER_PASSWORD_LENGTH})
 
 
-# TODO: SETTINGS FORM
+class SettingsForm(Form):
+    classifier = RadioField('classifier', choices=[('1', 'Artificial neural network')])
 
 
 class DataForm(Form):

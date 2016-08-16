@@ -10,10 +10,10 @@ from application import database
 APPLICATION_DIRECTORY = os.path.abspath(os.path.dirname(__file__))
 
 
-class Settings(database.Model):
+class Classifiers(database.Model):
     id = database.Column(database.Integer, primary_key=True)
     name = database.Column(database.String(32), index=True, unique=True)
-    users = database.relationship('Users', backref='setting', lazy='dynamic')
+    users = database.relationship('Users', backref='classifier', lazy='dynamic')
 
     def get_id(self):
         return unicode(self.id)
@@ -22,7 +22,7 @@ class Settings(database.Model):
         self.name = name
 
     def __repr__(self):
-        return '<Setting %r>' % self.name
+        return '<Classifier %r>' % self.name
 
 
 class Users(database.Model):
@@ -32,7 +32,7 @@ class Users(database.Model):
     email = database.Column(database.String(128), index=True, unique=True)
     password = database.Column(database.String(32), index=False, unique=False)
     salt = database.Column(database.String(8), index=False, unique=False)
-    setting_id = database.Column(database.Integer, database.ForeignKey('settings.id'))
+    classifier_id = database.Column(database.Integer, database.ForeignKey('classifiers.id'))
 
     @staticmethod
     def is_active():
@@ -63,7 +63,7 @@ class Users(database.Model):
         self.email = email
         self.password = password
         self.salt = salt
-        self.setting_id = 1
+        self.classifier_id = 1
 
     def __repr__(self):
         return '<User %r>' % self.username

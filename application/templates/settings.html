@@ -3,20 +3,14 @@
 {% block title %} - Settings{% endblock %}
 
 {% block content %}
-    <form role="form" class="form-horizontal" data-toggle="validator" method="post">
+    <form class="form-horizontal" method="post">
+        {{ settings_form.csrf_token }}
         <h3 class="page-header">Classifier</h3>
-        {# TODO: SETTINGS FLASK-WTF FORM #}
-        <div class="col-md-3 radio">
-            <label><input type="radio" name="classifier" checked>Artificial neural network</label>
+        <div class="radio">
+            {{ settings_form.classifier }}
         </div>
-        {# TODO: END #}
         <div class="col-md-12">
             <button class="btn btn-primary pull-right" type="submit">Save</button>
         </div>
     </form>
-{% endblock %}
-
-{% block scripts %}
-    {{ super() }}
-    <script src="{{ url_for('static', filename='js/validator.min.js') }}"></script>
 {% endblock %}

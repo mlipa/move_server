@@ -30,7 +30,7 @@ class Users(database.Model):
     name = database.Column(database.String(64), index=True, unique=False)
     username = database.Column(database.String(32), index=True, unique=True)
     email = database.Column(database.String(128), index=True, unique=True)
-    password = database.Column(database.String(32), index=False, unique=False)
+    password = database.Column(database.String(64), index=False, unique=False)
     salt = database.Column(database.String(8), index=False, unique=False)
     classifier_id = database.Column(database.Integer, database.ForeignKey('classifiers.id'))
 

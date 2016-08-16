@@ -7,21 +7,21 @@
         {{ data_form.csrf_token }}
         <h3 class="page-header">Change data</h3>
         <div class="form-group">
-            <label for="name" class="col-md-2 control-label">Name:</label>
+            <label for="df-name" class="col-md-2 control-label">Name:</label>
             <div class="col-md-3">
                 {{ data_form.name }}
                 <div class="help-block with-errors"></div>
             </div>
         </div>
         <div class="form-group">
-            <label for="username" class="col-md-2 control-label">Username:</label>
+            <label for="df-username" class="col-md-2 control-label">Username:</label>
             <div class="col-md-3">
                 {{ data_form.username }}
                 <div class="help-block with-errors"></div>
             </div>
         </div>
         <div class="form-group">
-            <label for="email" class="col-md-2 control-label">E-mail:</label>
+            <label for="df-email" class="col-md-2 control-label">E-mail:</label>
             <div class="col-md-3">
                 {{ data_form.email }}
                 <div class="help-block with-errors"></div>
@@ -35,21 +35,21 @@
         {{ password_form.csrf_token }}
         <h3 class="page-header">Change password</h3>
         <div class="form-group">
-            <label for="old_password" class="col-md-2 control-label">Old password:</label>
+            <label for="pf-old_password" class="col-md-2 control-label">Old password:</label>
             <div class="col-md-3">
                 {{ password_form.old_password(required=true) }}
                 <div class="help-block with-errors"></div>
             </div>
         </div>
         <div class="form-group">
-            <label for="new_password" class="col-md-2 control-label">New password:</label>
+            <label for="pf-new_password" class="col-md-2 control-label">New password:</label>
             <div class="col-md-3">
                 {{ password_form.new_password(required=true) }}
                 <div class="help-block with-errors"></div>
             </div>
         </div>
         <div class="form-group">
-            <label for="confirm_new_password" class="col-md-2 control-label">Confirm new password:</label>
+            <label for="pf-confirm_new_password" class="col-md-2 control-label">Confirm new password:</label>
             <div class="col-md-3">
                 {{ password_form.confirm_new_password(required=true) }}
                 <div class="help-block with-errors"></div>

@@ -7,35 +7,35 @@
         {{ data_form.csrf_token }}
         <h3 class="page-header">Sign up</h3>
         <div class="form-group">
-            <label for="name" class="col-md-1 control-label">Name:</label>
+            <label for="df-name" class="col-md-1 control-label">Name:</label>
             <div class="col-md-3">
                 {{ data_form.name(required=true) }}
                 <div class="help-block with-errors"></div>
             </div>
         </div>
         <div class="form-group">
-            <label for="username" class="col-md-1 control-label">Username:</label>
+            <label for="df-username" class="col-md-1 control-label">Username:</label>
             <div class="col-md-3">
                 {{ data_form.username(required=true) }}
                 <div class="help-block with-errors"></div>
             </div>
         </div>
         <div class="form-group">
-            <label for="email" class="col-md-1 control-label">E-mail:</label>
+            <label for="df-email" class="col-md-1 control-label">E-mail:</label>
             <div class="col-md-3">
                 {{ data_form.email(required=true) }}
                 <div class="help-block with-errors"></div>
             </div>
         </div>
         <div class="form-group">
-            <label for="new_password" class="col-md-1 control-label">Password:</label>
+            <label for="pf-new_password" class="col-md-1 control-label">Password:</label>
             <div class="col-md-3">
                 {{ password_form.new_password(required=true) }}
                 <div class="help-block with-errors"></div>
             </div>
         </div>
         <div class="form-group">
-            <label for="confirm_new_password" class="col-md-1 control-label">Confirm password:</label>
+            <label for="pf-confirm_new_password" class="col-md-1 control-label">Confirm password:</label>
             <div class="col-md-3">
                 {{ password_form.confirm_new_password(required=true) }}
                 <div class="help-block with-errors"></div>

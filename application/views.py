@@ -5,7 +5,7 @@ import os
 import random
 import string
 
-from flask import flash, g, Markup, redirect, render_template, request, url_for
+from flask import flash, g, jsonify, Markup, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 
 from application import application, avatars, database, hashing, login_manager, models
@@ -69,10 +69,10 @@ def log_in():
         user = models.Users.query.filter_by(username=username).first()
 
         if not user:
-            flash(Markup('<strong>Whops!</strong> The username and password do not match.'), 'danger')
+            flash(Markup('<strong>Whoops!</strong> The username and password do not match.'), 'danger')
         else:
             if not hashing.check_value(user.password, password, user.salt):
-                flash(Markup('<strong>Whops!</strong> The username and password do not match.'), 'danger')
+                flash(Markup('<strong>Whoops!</strong> The username and password do not match.'), 'danger')
             elif not login_user(user):
                 flash(Markup('<strong>Ugh!</strong> ' + str(user.name) + ', your account is banned.'), 'danger')
             else:
@@ -82,6 +82,30 @@ def log_in():
                     else redirect(url_for('dashboard'))
 
     return render_template('log_in.html', login_form=login_form)
+
+
+@application.route('/m_log_in', methods=['POST'])
+def m_log_in():
+    username = unicode(request.form.get('username'))
+    password = request.form.get('password')
+
+    user = models.Users.query.filter_by(username=username).first()
+
+    if not user:
+        response = {'success': False,
+                    'message': 'Whoops! The username and password do not match.'}
+    else:
+        if not hashing.check_value(user.password, password, user.salt):
+            response = {'success': False,
+                        'message': 'Whoops! The username and password do not match.'}
+        elif not login_user(user):
+            response = {'success': False,
+                        'message': 'Ugh! ' + str(user.name) + ', your account is banned.'}
+        else:
+            response = {'success': True,
+                        'message': 'Hello ' + str(g.user.name) + '! Glad you are back!'}
+
+    return jsonify(response)
 
 
 @application.route('/log_out', methods=['GET'])

@@ -5,7 +5,7 @@ import os
 import random
 import string
 
-from flask import flash, g, jsonify, Markup, redirect, render_template, request, url_for
+from flask import flash, g, jsonify, Markup, redirect, render_template, request, send_from_directory, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 
 from application import application, avatars, database, hashing, login_manager, models
@@ -171,12 +171,29 @@ def profile():
 @application.route('/m_profile', methods=['GET'])
 @login_required
 def m_profile():
-    response = {'success': True,
-                'name': g.user.name,
-                'username': g.user.username,
-                'email': g.user.email}
+    avatar_path = APPLICATION_DIRECTORY + url_for('static', filename='images/avatars/' + str(g.user.get_id()) + '.png')
+
+    if os.path.isfile(avatar_path):
+        response = {'success': True,
+                    'name': str(g.user.name),
+                    'username': str(g.user.username),
+                    'email': str(g.user.email),
+                    'avatar': True,
+                    'filename': str(g.user.get_id()) + '.png'}
+    else:
+        response = {'success': True,
+                    'name': str(g.user.name),
+                    'username': str(g.user.username),
+                    'email': str(g.user.email),
+                    'avatar': False}
 
     return jsonify(response)
+
+
+@application.route('/m_avatar/<path:filename>')
+@login_required
+def m_avatar(filename):
+    return send_from_directory(application.config['UPLOADED_AVATARS_DEST'], filename)
 
 
 @application.route('/edit_profile', methods=['GET', 'POST'])

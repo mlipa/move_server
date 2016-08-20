@@ -155,6 +155,17 @@ def profile():
     return render_template('profile.html')
 
 
+@application.route('/m_profile', methods=['GET'])
+@login_required
+def m_profile():
+    response = {'success': True,
+                'name': g.user.name,
+                'username': g.user.username,
+                'email': g.user.email}
+
+    return jsonify(response)
+
+
 @application.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
@@ -251,7 +262,6 @@ def validate():
 
         if request.args.get('old_password') \
                 and not hashing.check_value(g.user.password, request.args.get('old_password'), g.user.salt):
-            print 'password'
             return redirect(url_for('edit_profile')), 406
 
         return redirect(url_for('edit_profile')), 200

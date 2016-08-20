@@ -120,6 +120,19 @@ def log_out():
     return redirect(url_for('log_in'))
 
 
+@application.route('/m_log_out', methods=['GET'])
+@login_required
+def m_log_out():
+    logged_name = g.user.name
+
+    logout_user()
+
+    response = {'success': True,
+                'message': 'Bye, bye ' + str(logged_name) + '! Come back soon!'}
+
+    return jsonify(response)
+
+
 # TODO: DASHBOARD FUNCTIONALITY
 @application.route('/dashboard', methods=['GET'])
 @login_required

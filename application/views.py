@@ -146,20 +146,40 @@ def settings():
     settings_form = SettingsForm(prefix='sf')
 
     if settings_form.validate_on_submit():
-        classifier = int(settings_form.classifier.data)
+        classifier_id = int(settings_form.classifier.data)
 
         user = models.Users.query.get(g.user.get_id())
 
-        if classifier != user.classifier_id:
-            user.classifier_id = classifier
+        if classifier_id != user.classifier.id:
+            user.classifier_id = classifier_id
 
         database.session.commit()
 
         flash(Markup('<strong>Great!</strong> All settings has been changed successfully!'), 'success')
 
-    settings_form.classifier.data = str(g.user.classifier_id)
+    settings_form.classifier.data = str(g.user.classifier.id)
 
     return render_template('settings.html', settings_form=settings_form)
+
+
+@application.route('/m_settings', methods=['GET', 'POST'])
+@login_required
+def m_settings():
+    if request.method == 'POST':
+        classifier_id = int(request.form.get('classifierId'))
+
+        user = models.Users.query.get(g.user.get_id())
+
+        if classifier_id != user.classifier.id:
+            user.classifier_id = classifier_id
+
+        database.session.commit()
+
+    response = {'success': True,
+                'classifier_id': g.user.classifier.id,
+                'classifier_name': g.user.classifier.name}
+
+    return jsonify(response)
 
 
 @application.route('/profile', methods=['GET'])
@@ -190,7 +210,7 @@ def m_profile():
     return jsonify(response)
 
 
-@application.route('/m_avatar/<path:filename>')
+@application.route('/m_avatar/<path:filename>', methods=['GET'])
 @login_required
 def m_avatar(filename):
     return send_from_directory(application.config['UPLOADED_AVATARS_DEST'], filename)

@@ -294,24 +294,24 @@ def edit_profile():
 @application.route('/validate', methods=['GET'])
 def validate():
     if g.user.get_id() is None:
-        if models.Users.query.filter_by(username=unicode(request.args.get('username'))).first():
+        if models.Users.query.filter_by(username=unicode(request.args.get('df-username'))).first():
             return redirect(url_for('sign_up')), 406
 
-        if models.Users.query.filter_by(email=unicode(request.args.get('email'))).first():
+        if models.Users.query.filter_by(email=unicode(request.args.get('df-email'))).first():
             return redirect(url_for('sign_up')), 406
 
         return redirect(url_for('sign_up')), 200
     else:
-        if unicode(request.args.get('username')) != g.user.username \
-                and models.Users.query.filter_by(username=unicode(request.args.get('username'))).first():
+        if unicode(request.args.get('df-username')) != g.user.username \
+                and models.Users.query.filter_by(username=unicode(request.args.get('df-username'))).first():
             return redirect(url_for('edit_profile')), 406
 
-        if unicode(request.args.get('email')) != g.user.email \
-                and models.Users.query.filter_by(email=unicode(request.args.get('email'))).first():
+        if unicode(request.args.get('df-email')) != g.user.email \
+                and models.Users.query.filter_by(email=unicode(request.args.get('df-email'))).first():
             return redirect(url_for('edit_profile')), 406
 
-        if request.args.get('old_password') \
-                and not hashing.check_value(g.user.password, request.args.get('old_password'), g.user.salt):
+        if request.args.get('pf-old_password') \
+                and not hashing.check_value(g.user.password, request.args.get('pf-old_password'), g.user.salt):
             return redirect(url_for('edit_profile')), 406
 
         return redirect(url_for('edit_profile')), 200

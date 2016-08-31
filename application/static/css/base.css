@@ -11,3 +11,13 @@ body {
     width: 400px;
     height: 200px;
 }
+
+.img-current-activity {
+    width: 200px;
+    height: 200px;
+}
+
+.img-last-activity {
+    width: 100px;
+    height: 100px;
+}

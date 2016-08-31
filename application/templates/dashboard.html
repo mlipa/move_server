@@ -3,12 +3,57 @@
 {% block title %} - Dashboard{% endblock %}
 
 {% block content %}
-    <h3 class="page-header">Dashboard</h3>
-    {# TODO: DASHBOARD TEMPLATE #}
-    <div class="col-md-12">
-        <img class="img-build img-responsive center-block" src="{{ url_for('static', filename='images/build.png') }}">
-        <br>
-        <p class="text-center"><strong>Be patient!</strong> The entire single team is building this site.</p>
+    <h3 class="page-header">Current activity</h3>
+    <img id="current-activity" class="img-current-activity img-responsive center-block"
+         src="{{ url_for('static', filename='images/activities/not_detected.png') }}">
+    <h3 class="page-header">Last activities</h3>
+    {# TODO: GET DATA FROM DATABASE AND USE FOR LOOP #}
+    <div class="col-md-1">
+        <img id="last-activity-1" class="img-last-activity img-responsive center-block"
+             src="{{ url_for('static', filename='images/activities/not_detected.png') }}">
     </div>
-    {# TODO: END #}
+    <div class="col-md-1">
+        <img id="last-activity-2" class="img-last-activity img-responsive center-block"
+             src="{{ url_for('static', filename='images/activities/not_detected.png') }}">
+    </div>
+    <div class="col-md-1">
+        <img id="last-activity-3" class="img-last-activity img-responsive center-block"
+             src="{{ url_for('static', filename='images/activities/not_detected.png') }}">
+    </div>
+    <div class="col-md-1">
+        <img id="last-activity-4" class="img-last-activity img-responsive center-block"
+             src="{{ url_for('static', filename='images/activities/not_detected.png') }}">
+    </div>
+    <div class="col-md-1">
+        <img id="last-activity-5" class="img-last-activity img-responsive center-block"
+             src="{{ url_for('static', filename='images/activities/not_detected.png') }}">
+    </div>
+    <div class="col-md-1">
+        <img id="last-activity-6" class="img-last-activity img-responsive center-block"
+             src="{{ url_for('static', filename='images/activities/not_detected.png') }}">
+    </div>
+    <div class="col-md-1">
+        <img id="last-activity-7" class="img-last-activity img-responsive center-block"
+             src="{{ url_for('static', filename='images/activities/not_detected.png') }}">
+    </div>
+    <div class="col-md-1">
+        <img id="last-activity-8" class="img-last-activity img-responsive center-block"
+             src="{{ url_for('static', filename='images/activities/not_detected.png') }}">
+    </div>
+    <div class="col-md-1">
+        <img id="last-activity-9" class="img-last-activity img-responsive center-block"
+             src="{{ url_for('static', filename='images/activities/not_detected.png') }}">
+    </div>
+    <div class="col-md-1">
+        <img id="last-activity-10" class="img-last-activity img-responsive center-block"
+             src="{{ url_for('static', filename='images/activities/not_detected.png') }}">
+    </div>
+    <div class="col-md-1">
+        <img id="last-activity-11" class="img-last-activity img-responsive center-block"
+             src="{{ url_for('static', filename='images/activities/not_detected.png') }}">
+    </div>
+    <div class="col-md-1">
+        <img id="last-activity-12" class="img-last-activity img-responsive center-block"
+             src="{{ url_for('static', filename='images/activities/not_detected.png') }}">
+    </div>
 {% endblock %}

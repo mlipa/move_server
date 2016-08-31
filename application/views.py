@@ -140,6 +140,29 @@ def dashboard():
     return render_template('dashboard.html')
 
 
+@application.route('/prediction', methods=['POST'])
+@login_required
+def prediction():
+    timestamp = unicode(request.form.get('timestamp'))
+    activity_id = int(request.form.get('activityId'))
+    classifier_id = int(request.form.get('classifierId'))
+    user_id = int(request.form.get('userId'))
+
+    prediction = models.Predictions(timestamp, activity_id, classifier_id, user_id)
+
+    database.session.add(prediction)
+    database.session.commit()
+
+    response = {'success': True,
+                'prediction_id': prediction.get_id(),
+                'timestamp': prediction.timestamp,
+                'activity_id': prediction.activity_id,
+                'classifier_id': prediction.classifier_id,
+                'user_id': prediction.user_id}
+
+    return jsonify(response)
+
+
 @application.route('/settings', methods=['GET', 'POST'])
 @login_required
 def settings():

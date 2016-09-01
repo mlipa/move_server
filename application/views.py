@@ -140,9 +140,9 @@ def dashboard():
     return render_template('dashboard.html')
 
 
-@application.route('/prediction', methods=['POST'])
+@application.route('/m_prediction', methods=['POST'])
 @login_required
-def prediction():
+def m_prediction():
     timestamp = unicode(request.form.get('timestamp'))
     activity_id = int(request.form.get('activityId'))
     classifier_id = int(request.form.get('classifierId'))

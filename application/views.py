@@ -103,7 +103,9 @@ def m_log_in():
                         'message': 'Ugh! ' + str(user.name) + ', your account is banned.'}
         else:
             response = {'success': True,
-                        'message': 'Hello ' + str(g.user.name) + '! Glad you are back!'}
+                        'message': 'Hello ' + str(g.user.name) + '! Glad you are back!',
+                        'user_id': str(g.user.get_id()),
+                        'user_username': str(g.user.username)}
 
     return jsonify(response)
 

@@ -9,7 +9,7 @@ from flask import flash, g, jsonify, Markup, redirect, render_template, request,
 from flask_login import current_user, login_required, login_user, logout_user
 
 from application import application, avatars, database, hashing, login_manager, models
-from forms import AvatarForm, DataForm, LogInForm, PasswordForm, SettingsForm
+from forms import AvatarForm, DataForm, LogInForm, PasswordForm
 
 APPLICATION_DIRECTORY = os.path.abspath(os.path.dirname(__file__))
 USER_SALT_LENGTH = models.Users.salt.property.columns[0].type.length
@@ -161,48 +161,6 @@ def m_prediction():
                 'activity_id': prediction.activity_id,
                 'classifier_id': prediction.classifier_id,
                 'user_id': prediction.user_id}
-
-    return jsonify(response)
-
-
-@application.route('/settings', methods=['GET', 'POST'])
-@login_required
-def settings():
-    settings_form = SettingsForm(prefix='sf')
-
-    if settings_form.validate_on_submit():
-        classifier_id = int(settings_form.classifier.data)
-
-        user = models.Users.query.get(g.user.get_id())
-
-        if classifier_id != user.classifier.id:
-            user.classifier_id = classifier_id
-
-        database.session.commit()
-
-        flash(Markup('<strong>Great!</strong> All settings has been changed successfully!'), 'success')
-
-    settings_form.classifier.data = str(g.user.classifier.id)
-
-    return render_template('settings.html', settings_form=settings_form)
-
-
-@application.route('/m_settings', methods=['GET', 'POST'])
-@login_required
-def m_settings():
-    if request.method == 'POST':
-        classifier_id = int(request.form.get('classifierId'))
-
-        user = models.Users.query.get(g.user.get_id())
-
-        if classifier_id != user.classifier.id:
-            user.classifier_id = classifier_id
-
-        database.session.commit()
-
-    response = {'success': True,
-                'classifier_id': g.user.classifier.id,
-                'classifier_name': g.user.classifier.name}
 
     return jsonify(response)
 

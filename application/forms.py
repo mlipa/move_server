@@ -3,7 +3,7 @@
 
 from flask_wtf import Form
 from flask_wtf.html5 import EmailField
-from wtforms import FileField, PasswordField, RadioField, StringField
+from wtforms import FileField, PasswordField, StringField
 
 from application import models
 
@@ -15,10 +15,6 @@ USER_EMAIL_LENGTH = models.Users.email.property.columns[0].type.length
 class LogInForm(Form):
     username = StringField('username', render_kw={'class': 'form-control', 'maxlength': USER_USERNAME_LENGTH})
     password = PasswordField('password', render_kw={'class': 'form-control', 'maxlength': USER_USERNAME_LENGTH})
-
-
-class SettingsForm(Form):
-    classifier = RadioField('classifier', choices=[('1', 'Artificial neural network')])
 
 
 class DataForm(Form):

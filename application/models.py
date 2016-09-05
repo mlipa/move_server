@@ -29,7 +29,6 @@ class Classifiers(database.Model):
     id = database.Column(database.Integer, primary_key=True)
     name = database.Column(database.String(32), index=True, unique=True)
     predictions = database.relationship('Predictions', backref='classifier', lazy='dynamic')
-    users = database.relationship('Users', backref='classifier', lazy='dynamic')
 
     def get_id(self):
         return unicode(self.id)
@@ -68,7 +67,6 @@ class Users(database.Model):
     email = database.Column(database.String(128), index=True, unique=True)
     password = database.Column(database.String(64), index=False, unique=False)
     salt = database.Column(database.String(8), index=False, unique=False)
-    classifier_id = database.Column(database.Integer, database.ForeignKey('classifiers.id'))
     predictions = database.relationship('Predictions', backref='user', lazy='dynamic')
 
     @staticmethod
@@ -100,7 +98,6 @@ class Users(database.Model):
         self.email = email
         self.password = password
         self.salt = salt
-        self.classifier_id = 1
 
     def __repr__(self):
         return '<User %r>' % self.username

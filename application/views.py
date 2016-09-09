@@ -105,7 +105,7 @@ def m_log_in():
             response = {'success': True,
                         'message': 'Hello ' + str(g.user.name) + '! Glad you are back!',
                         'user_id': str(g.user.get_id()),
-                        'user_username': str(g.user.username)}
+                        'username': str(g.user.username)}
 
     return jsonify(response)
 

@@ -4,56 +4,28 @@
 
 {% block content %}
     <h3 class="page-header">Current activity</h3>
-    <img id="current-activity" class="img-current-activity img-responsive center-block"
-         src="{{ url_for('static', filename='images/activities/not_detected.png') }}">
+    {% if current_activity %}
+        <img id="current-activity" class="img-activity img-responsive center-block" src="{{ current_activity[1] }}">
+        <p id="current-timestamp" class="text-center">{{ current_activity[0] }}</p>
+    {% else %}
+        <img id="current-activity" class="img-activity img-responsive center-block"
+             src="{{ url_for('static', filename='images/activities/not_detected.png') }}">
+    {% endif %}
+
     <h3 class="page-header">Last activities</h3>
-    {# TODO: GET DATA FROM DATABASE AND USE FOR LOOP #}
-    <div class="col-md-1">
-        <img id="last-activity-1" class="img-last-activity img-responsive center-block"
-             src="{{ url_for('static', filename='images/activities/not_detected.png') }}">
-    </div>
-    <div class="col-md-1">
-        <img id="last-activity-2" class="img-last-activity img-responsive center-block"
-             src="{{ url_for('static', filename='images/activities/not_detected.png') }}">
-    </div>
-    <div class="col-md-1">
-        <img id="last-activity-3" class="img-last-activity img-responsive center-block"
-             src="{{ url_for('static', filename='images/activities/not_detected.png') }}">
-    </div>
-    <div class="col-md-1">
-        <img id="last-activity-4" class="img-last-activity img-responsive center-block"
-             src="{{ url_for('static', filename='images/activities/not_detected.png') }}">
-    </div>
-    <div class="col-md-1">
-        <img id="last-activity-5" class="img-last-activity img-responsive center-block"
-             src="{{ url_for('static', filename='images/activities/not_detected.png') }}">
-    </div>
-    <div class="col-md-1">
-        <img id="last-activity-6" class="img-last-activity img-responsive center-block"
-             src="{{ url_for('static', filename='images/activities/not_detected.png') }}">
-    </div>
-    <div class="col-md-1">
-        <img id="last-activity-7" class="img-last-activity img-responsive center-block"
-             src="{{ url_for('static', filename='images/activities/not_detected.png') }}">
-    </div>
-    <div class="col-md-1">
-        <img id="last-activity-8" class="img-last-activity img-responsive center-block"
-             src="{{ url_for('static', filename='images/activities/not_detected.png') }}">
-    </div>
-    <div class="col-md-1">
-        <img id="last-activity-9" class="img-last-activity img-responsive center-block"
-             src="{{ url_for('static', filename='images/activities/not_detected.png') }}">
-    </div>
-    <div class="col-md-1">
-        <img id="last-activity-10" class="img-last-activity img-responsive center-block"
-             src="{{ url_for('static', filename='images/activities/not_detected.png') }}">
-    </div>
-    <div class="col-md-1">
-        <img id="last-activity-11" class="img-last-activity img-responsive center-block"
-             src="{{ url_for('static', filename='images/activities/not_detected.png') }}">
-    </div>
-    <div class="col-md-1">
-        <img id="last-activity-12" class="img-last-activity img-responsive center-block"
-             src="{{ url_for('static', filename='images/activities/not_detected.png') }}">
+    <div class="row">
+        {% for timestamp, image in last_activities %}
+            <div class="col-md-2">
+                <img id="last-activity-{{ i }}" class="img-activity img-responsive center-block" src="{{ image }}">
+                <p id="last-timestamp-{{ i }}" class="text-center">{{ timestamp }}</p>
+            </div>
+        {% endfor %}
+
+        {% for i in range(last_length, 6) %}
+            <div class="col-md-2">
+                <img id="last-activity-{{ i }}" class="img-activity img-responsive center-block"
+                     src="{{ url_for('static', filename='images/activities/not_detected.png') }}">
+            </div>
+        {% endfor %}
     </div>
 {% endblock %}

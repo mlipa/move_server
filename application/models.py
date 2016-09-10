@@ -42,7 +42,7 @@ class Classifiers(database.Model):
 
 class Predictions(database.Model):
     id = database.Column(database.Integer, primary_key=True)
-    timestamp = database.Column(database.DateTime, index=True, unique=False)
+    timestamp = database.Column(database.String(23), index=True, unique=False)
     activity_id = database.Column(database.Integer, database.ForeignKey('activities.id'))
     classifier_id = database.Column(database.Integer, database.ForeignKey('classifiers.id'))
     user_id = database.Column(database.Integer, database.ForeignKey('users.id'))

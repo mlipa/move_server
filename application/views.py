@@ -135,11 +135,32 @@ def m_log_out():
     return jsonify(response)
 
 
-# TODO: DASHBOARD FUNCTIONALITY
 @application.route('/dashboard', methods=['GET'])
 @login_required
 def dashboard():
-    return render_template('dashboard.html')
+    current_activity = []
+    last_timestamps = []
+    last_images = []
+    activities = {
+        1: url_for('static', filename='images/activities/lie.png'),
+        2: url_for('static', filename='images/activities/sit.png'),
+        3: url_for('static', filename='images/activities/stand.png'),
+        4: url_for('static', filename='images/activities/walk.png')
+    }
+
+    predictions = models.Predictions.query.filter_by(user_id=g.user.get_id()). \
+        order_by(models.Predictions.id.desc()).limit(7)
+
+    for prediction in predictions:
+        last_timestamps.append(prediction.timestamp)
+        last_images.append(activities.get(prediction.activity_id))
+
+    if last_timestamps:
+        current_activity.append(last_timestamps.pop(0))
+        current_activity.append(last_images.pop(0))
+
+    return render_template('dashboard.html', current_activity=current_activity,
+                           last_activities=zip(last_timestamps, last_images), last_length=len(last_timestamps))
 
 
 @application.route('/m_prediction', methods=['POST'])

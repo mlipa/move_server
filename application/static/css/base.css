@@ -7,12 +7,7 @@ body {
     height: 200px;
 }
 
-.img-current-activity {
+.img-activity {
     width: 200px;
     height: 200px;
-}
-
-.img-last-activity {
-    width: 100px;
-    height: 100px;
 }
